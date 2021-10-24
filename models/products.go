@@ -13,11 +13,22 @@ type Product struct {
 
 func (product *Product) Validate() (map[string]interface{}, bool) {
 	//товар должен быть уникален
-	temp := Product{}
-	err := GetDB().Table("product").Where("name = ?", product.Name).First(temp).Error
+	//temp := Product{}
+	//err := GetDB().Table("products").Where("name = ?", product.Name).First(temp).Error
+	//
+	////if err != nil && err == gorm.ErrRecordNotFound {
+	//if err != nil {
+	//	return u.Message(500, "Connection error. Please retry" + product.Name), false
+	//}
+	////}
+	//Account должен быть уникальным
+	temp := &Product{}
+
+	err := GetDB().Table("products").Where("name = ?", product.Name).First(temp).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return u.Message(500, "Connection error. Please retry"), false
 	}
+
 	if temp.Name != "" {
 		return u.Message(400, "A product with this name already exists"), false
 	}
@@ -43,7 +54,7 @@ func (product *Product) Create() map[string]interface{} {
 
 func GetProduct(product string) *Product {
 	acc := &Product{}
-	GetDB().Table("product").Where("name = ?", product).First(acc)
+	GetDB().Table("products").Where("name = ?", product).First(acc)
 	if acc.Name == "" { //Товар не найден!
 		return nil
 	}

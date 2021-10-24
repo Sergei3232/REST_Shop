@@ -98,13 +98,21 @@ func Login(account, password string) map[string]interface{} {
 	return resp
 }
 
-func GetUser(account string) *Users {
+func GetUser(id uint) *Users {
 	acc := &Users{}
-	GetDB().Table("users").Where("account = ?", account).First(acc)
+	GetDB().Table("users").Where("id = ?", id).First(acc)
 	if acc.Account == "" { //Пользователь не найден!
 		return nil
 	}
 
 	acc.Password = ""
 	return acc
+}
+
+func RoleAvailable(id uint, role string) bool {
+	userVal := GetUser(id)
+	if userVal.Type == role {
+		return true
+	}
+	return false
 }

@@ -15,7 +15,7 @@ func init() {
 	}
 
 	db = conn
-	db.Debug().AutoMigrate(&Users{})
+	db.Debug().AutoMigrate(&Users{}, &Product{})
 
 	initManagers()
 }
